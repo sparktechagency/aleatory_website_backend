@@ -213,6 +213,46 @@ const getTermsConditions = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const addAboutUs = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.addAboutUs(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Successful',
+    data: result,
+  });
+});
+const getAboutUs = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.getAboutUs();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Successful',
+    data: result,
+  });
+});
+
+const addHelpSupport = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.addHelpSupport(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Successful',
+    data: result,
+  });
+});
+const getHelpSupport = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.getHelpSupport();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Successful',
+    data: result,
+  });
+});
+
+
 const addPrivacyPolicy = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.addPrivacyPolicy(req.body);
   sendResponse(res, {
@@ -255,6 +295,9 @@ export const DashboardController = {
   totalCount,
   getMonthlySubscriptionGrowth,
   getMonthlyUserGrowth,
-
+  addHelpSupport,
+  getHelpSupport,
+  addAboutUs,
+  getAboutUs
 
 };

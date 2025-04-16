@@ -3,7 +3,7 @@ import QueryBuilder from "../../../builder/QueryBuilder";
 import ApiError from "../../../errors/ApiError";
 import { IReqUser } from "../auth/auth.interface";
 import User from "../user/user.model";
-import { Adds, Faq, PrivacyPolicy, Subscription, TermsConditions } from "./dashboard.model";
+import { AboutUs, Adds, Faq, HelpSupport, PrivacyPolicy, Subscription, TermsConditions } from "./dashboard.model";
 import { IAdds, IContactSupport, IRecipe, ISubscriptions } from "./dsashbaord.interface";
 import { IUser } from "../user/user.interface";
 import { logger } from "../../../shared/logger";
@@ -347,7 +347,6 @@ const addTermsConditions = async (payload: any) => {
     if (checkIsExist) {
         return await TermsConditions.findOneAndUpdate({}, payload, {
             new: true,
-
             runValidators: true,
         });
     } else {
@@ -356,6 +355,39 @@ const addTermsConditions = async (payload: any) => {
 };
 const getTermsConditions = async () => {
     return await TermsConditions.findOne();
+};
+
+const addHelpSupport = async (payload: any) => {
+    const checkIsExist = await HelpSupport.findOne();
+    if (checkIsExist) {
+        return await HelpSupport.findOneAndUpdate({}, payload, {
+            new: true,
+
+            runValidators: true,
+        });
+    } else {
+        return await HelpSupport.create(payload);
+    }
+};
+const getHelpSupport = async () => {
+    const result = await HelpSupport.findOne();
+    return result
+};
+
+const addAboutUs = async (payload: any) => {
+    const checkIsExist = await AboutUs.findOne();
+    if (checkIsExist) {
+        return await AboutUs.findOneAndUpdate({}, payload, {
+            new: true,
+            runValidators: true,
+        });
+    } else {
+        return await AboutUs.create(payload);
+    }
+};
+const getAboutUs = async () => {
+    const result = await AboutUs.findOne();
+    return result
 };
 
 const addPrivacyPolicy = async (payload: any) => {
@@ -407,5 +439,10 @@ export const DashboardService = {
     getPrivacyPolicy,
     getMonthlySubscriptionGrowth,
     getMonthlyUserGrowth,
-    deleteSubscription
+    deleteSubscription,
+    addHelpSupport,
+    getHelpSupport,
+    addAboutUs,
+    getAboutUs
+
 };

@@ -29,44 +29,8 @@ const UserSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    street: {
+    address: {
       type: String,
-      default: null,
-    },
-    neighborhood: {
-      type: String,
-      default: null,
-    },
-    mail_types: {
-      type: [String],
-      default: ['None'],
-      enum: ENUM_MEAL_TYPE,
-    },
-    relevant_dielary: {
-      type: [String],
-      default: null,
-      enum: ['Gluten-Free', 'Vegan', 'Vegetarian', 'Keto', 'Paleo'],
-    },
-    helgth_goal: {
-      type: [String],
-      enum: ["weight_loss", "muscle_gain", "maintain_weight"],
-      required: true
-    },
-    age: {
-      type: String,
-      default: null,
-    },
-    weight: {
-      type: String,
-    },
-    hight: {
-      type: String,
-    },
-    activety_lavel: {
-      type: String,
-    },
-    date_of_birth: {
-      type: Date,
     },
     amount: {
       type: Number,

@@ -75,11 +75,19 @@ router.delete('/delete-faqs/:id',
 router.get('/get-faqs',
   DashboardController.getFaq,
 );
-router.post('/addupdate-termsConditions',
+
+router.post('/add-rules',
   DashboardController.addTermsConditions,
 );
 router.get('/get-rules',
   DashboardController.getTermsConditions,
+);
+
+router.post('/addupdate_help_support',
+  DashboardController.addHelpSupport,
+);
+router.get('/get_help_support',
+  DashboardController.getHelpSupport,
 );
 
 router.post('/addupdate-privacy-policy',
@@ -88,6 +96,14 @@ router.post('/addupdate-privacy-policy',
 router.get('/get-privacy-policy',
   DashboardController.getPrivacyPolicy,
 );
+
+router.post('/addupdate-aboutus',
+  DashboardController.addAboutUs,
+);
+router.get('/get_aboutus',
+  DashboardController.getAboutUs,
+);
+
 // ================================ 
 
 // ================================

@@ -25,6 +25,7 @@ const getMessages: RequestHandler = catchAsync(
     });
   },
 );
+
 const conversationUser: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const result = await messageService.conversationUser();
@@ -36,8 +37,9 @@ const conversationUser: RequestHandler = catchAsync(
     });
   },
 );
+
 export const messageController = {
   sendMessage,
-  getMessages, 
+  getMessages,
   conversationUser,
 };
