@@ -1,27 +1,23 @@
 import mongoose, { Model, Schema, Types } from "mongoose";
-import { IAdds, IComment, IContactSupport, INutritional, IRecipe, IReview, ISubscriptions } from "./dsashbaord.interface";
-import { string } from "zod";
+import { ICuisine, IComment, IReview, IVibe, ICoordinates, IRestaurant } from "./dsashbaord.interface";
 
-
-const SubscriptionSchema = new Schema<ISubscriptions>({
-    name: {
+const Coordinates = new Schema<ICoordinates>({
+    type: {
         type: String,
-        required: true
+        enum: ['Point'],
+        default: 'Point'
     },
-    duration: {
-        type: String,
+    coordinates: {
+        type: [Number],
         required: true,
-        enum: ["Monthly", "Yearly"]
+        validate: {
+            validator: function (arr: number[]) {
+                return arr.length === 2;
+            },
+            message: 'Coordinates must be an array of two numbers (longitude, latitude).',
+        },
     },
-    fee: {
-        type: Number,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    }
-}, { timestamps: true });
+});
 
 
 const CommentSchema = new Schema<IComment>({
@@ -58,18 +54,22 @@ const ReviewSchema = new Schema<IReview>({
     },
 });
 
-const nutritionalSchema = new Schema<INutritional>({
-    calories: { type: Number, required: true },
-    protein: { type: Number, required: true },
-    carbs: { type: Number, required: true },
-    fat: { type: Number, required: true },
-    fiber: { type: Number, required: true }
-})
-
-
-const addsSchema = new Schema<IAdds>(
+const cuisineSchema = new Schema<ICuisine>(
     {
-        url: {
+        title: {
+            type: String,
+            required: true,
+        },
+        image: {
+            type: String,
+            required: true,
+        },
+    }
+);
+
+const vibeSchema = new Schema<IVibe>(
+    {
+        name: {
             type: String,
             required: true,
         },
@@ -129,10 +129,73 @@ const privacyPolicySchema = new mongoose.Schema(
     }
 );
 
-const Subscription: Model<ISubscriptions> = mongoose.model<ISubscriptions>('Subscription', SubscriptionSchema);
+const restaurantsSchema = new Schema<IRestaurant>(
+    {
+        cover_photo: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        cuisine: {
+            type: Schema.Types.ObjectId,
+            ref: 'Cuisine',
+            required: true
+        },
+        vibe: {
+            type: Schema.Types.ObjectId,
+            ref: 'Vibe',
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        },
+        phone: {
+            type: String,
+            required: true
+        },
+        website_address: {
+            type: String,
+            required: true
+        },
+        open_hours: {
+            type: String,
+            required: true
+        },
+        price_range: {
+            type: String,
+            required: true
+        },
+        overview: {
+            type: String,
+            required: true
+        },
+        signature: {
+            type: String,
+            required: true
+        },
+        gallery_photo: {
+            type: [String],
+            required: true
+        },
+        locations: {
+            type: Coordinates,
+            required: true
+        }
+    },
+    { timestamps: true }
+);
+
+
 const Comment: Model<IComment> = mongoose.model<IComment>('Comment', CommentSchema);
+const Restaurant: Model<IRestaurant> = mongoose.model<IRestaurant>('Restaurant', restaurantsSchema);
+
 const Review: Model<IReview> = mongoose.model<IReview>('Review', ReviewSchema);
-const Adds: Model<IAdds> = mongoose.model<IAdds>('Adds', addsSchema);
+const Cuisine: Model<ICuisine> = mongoose.model<ICuisine>('Cuisine', cuisineSchema);
+const Vibe: Model<IVibe> = mongoose.model<IVibe>('Vibe', vibeSchema);
 const Faq = mongoose.model('Faq', faqSchema);
 const TermsConditions = mongoose.model('TermsConditions', termsAndConditionsSchema);
 const HelpSupport = mongoose.model('HelpSupport', helpSupportSchema);
@@ -140,7 +203,7 @@ const AboutUs = mongoose.model('AboutUs', aboutUsSchema);
 const PrivacyPolicy = mongoose.model('PrivacyPolicy', privacyPolicySchema);
 
 
-export { Subscription, Comment, Review, Adds, Faq, TermsConditions, PrivacyPolicy, HelpSupport, AboutUs };
+export { Restaurant, Comment, Review, Cuisine, Faq, TermsConditions, PrivacyPolicy, HelpSupport, AboutUs, Vibe };
 
 
 // enum: ["African", "American", "Asian", "Caribbean", "Chinese", "Cuban", "East-African", "Ethiopian", "European", "French", "German", "Greek", "Indian", "Irish", "Israeli", "Italian", "Jamaican", "Japanese", "Korean", "Latin-American", "Mediterranean", "Mexican", "Middle-Eastern", "Moroccan", "North-African", "Persian", "Peruvian", "Puerto-Rican", "Russian", "Spanish", "Tex-Mex", "Thai", "Vietnamese", "West-African"],

@@ -11,58 +11,58 @@ router.get('/get_total_count',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   DashboardController.totalCount,
 );
-router.get('/get_subscription_growth',
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-  DashboardController.getMonthlySubscriptionGrowth,
-);
 router.get('/get_user_growth',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   DashboardController.getMonthlyUserGrowth,
 );
-
 // =============================
 router.get('/get_all_user',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   DashboardController.getAllUser,
 );
-router.post('/create_subscriptions',
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-  DashboardController.createSubscriptions,
-);
-router.patch('/update_subscriptions/:id',
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-  DashboardController.updateSubscription,
-);
-router.delete('/delete_subscriptions/:id',
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-  DashboardController.deleteSubscription,
-);
-router.get('/get_all_subscriptions',
-  DashboardController.getAllSubscription,
-);
-// ========================================= 
-// =========================================
-router.post('/create-adds',
+// =Vibe =======================
+router.post('/create-vibes',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   uploadFile(),
-  DashboardController.addsInsertIntoDB,
+  DashboardController.createVibeIntoDB,
 );
 router.get(
-  '/all-adds',
-  DashboardController.allAdds,
+  '/all-vibes',
+  DashboardController.allVibes,
 );
 router.patch(
-  '/edit-adds/:id',
+  '/edit-vibes/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   uploadFile(),
-  DashboardController.updateAdds,
+  DashboardController.updateVibes,
 );
 router.delete(
-  '/delete-adds/:id',
+  '/delete-vibes/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-  DashboardController.deleteAdds,
+  DashboardController.deleteVibes,
 );
-// ========================
+// =Cuisine ====================
+router.post('/create-cuisine',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  uploadFile(),
+  DashboardController.cuisineInsertIntoDB,
+);
+router.get(
+  '/all-cuisine',
+  DashboardController.allCuisine,
+);
+router.patch(
+  '/edit-cuisine/:id',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  uploadFile(),
+  DashboardController.updateCuisine,
+);
+router.delete(
+  '/delete-cuisine/:id',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  DashboardController.deleteCuisine,
+);
+// ==============================
 router.post('/add-faqs',
   DashboardController.addFaq,
 );
@@ -75,38 +75,42 @@ router.delete('/delete-faqs/:id',
 router.get('/get-faqs',
   DashboardController.getFaq,
 );
-
+// ==============================
 router.post('/add-rules',
   DashboardController.addTermsConditions,
 );
 router.get('/get-rules',
   DashboardController.getTermsConditions,
 );
-
+// ==============================
 router.post('/addupdate_help_support',
   DashboardController.addHelpSupport,
 );
 router.get('/get_help_support',
   DashboardController.getHelpSupport,
 );
-
+// ==============================
 router.post('/addupdate-privacy-policy',
   DashboardController.addPrivacyPolicy,
 );
 router.get('/get-privacy-policy',
   DashboardController.getPrivacyPolicy,
 );
-
+// ==============================
 router.post('/addupdate-aboutus',
   DashboardController.addAboutUs,
 );
 router.get('/get_aboutus',
   DashboardController.getAboutUs,
 );
+// ==============================
+router.post('/create_restaurant',
+  uploadFile(),
+  DashboardController.createRestaurant,
+);
 
-// ================================ 
 
-// ================================
+// ==============================
 
 
 export const DashboardRoutes = router;

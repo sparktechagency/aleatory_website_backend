@@ -53,17 +53,21 @@ export interface IReview extends Document {
   feedback: string;
 }
 
-
 export interface IComment extends Document {
   userId: Types.ObjectId;
   replay: Types.ObjectId;
   text: string;
 }
 
-export type IAdds = {
+export type ICuisine = {
+  title: string;
   image: string;
-  url: string;
 };
+
+export type IVibe = {
+  name: string;
+  image: string;
+}
 
 export type IContactSupport = {
   name: string;
@@ -72,6 +76,28 @@ export type IContactSupport = {
   message: string;
   user: Types.ObjectId;
 }
+
+export type ICoordinates = {
+  type: 'Point';
+  coordinates: [number, number];
+};
+
+export type IRestaurant = {
+  cover_photo: string;
+  name: string;
+  cuisine: Types.ObjectId;
+  vibe: Types.ObjectId;
+  email: string;
+  phone: string;
+  website_address: string;
+  open_hours: string;
+  price_range: string;
+  overview: string;
+  signature: string;
+  locations: ICoordinates;
+  gallery_photo: string[];
+}
+
 
 // export interface IComment extends Document {
 //   userId: Types.ObjectId;

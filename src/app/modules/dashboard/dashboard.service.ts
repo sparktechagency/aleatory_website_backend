@@ -1,13 +1,12 @@
-import { Types } from "mongoose";
+
 import QueryBuilder from "../../../builder/QueryBuilder";
 import ApiError from "../../../errors/ApiError";
-import { IReqUser } from "../auth/auth.interface";
 import User from "../user/user.model";
-import { AboutUs, Adds, Faq, HelpSupport, PrivacyPolicy, Subscription, TermsConditions } from "./dashboard.model";
-import { IAdds, IContactSupport, IRecipe, ISubscriptions } from "./dsashbaord.interface";
-import { IUser } from "../user/user.interface";
+import { AboutUs, Cuisine, Faq, HelpSupport, PrivacyPolicy, Restaurant, TermsConditions, Vibe } from "./dashboard.model";
+import { ICoordinates, ICuisine, IRestaurant, IVibe } from "./dsashbaord.interface";
 import { logger } from "../../../shared/logger";
 import { Transaction } from "../payment/payment.model";
+import httpStatus from "http-status";
 
 // ===========================================
 const getYearRange = (year: any) => {
@@ -37,78 +36,77 @@ const totalCount = async () => {
     };
 };
 
-const getMonthlySubscriptionGrowth = async (year?: number) => {
-    try {
-        const currentYear = new Date().getFullYear();
-        const selectedYear = year || currentYear;
+//     try {
+//         const currentYear = new Date().getFullYear();
+//         const selectedYear = year || currentYear;
 
-        const { startDate, endDate } = getYearRange(selectedYear);
+//         const { startDate, endDate } = getYearRange(selectedYear);
 
-        const monthlySubscriptionGrowth = await Subscription.aggregate([
-            {
-                $match: {
-                    createdAt: {
-                        $gte: startDate,
-                        $lt: endDate,
-                    },
-                },
-            },
-            {
-                $group: {
-                    _id: {
-                        month: { $month: '$createdAt' },
-                        year: { $year: '$createdAt' },
-                    },
-                    count: { $sum: 1 },
-                },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    month: '$_id.month',
-                    year: '$_id.year',
-                    count: 1,
-                },
-            },
-            {
-                $sort: { month: 1 },
-            },
-        ]);
+//         const monthlySubscriptionGrowth = await Subscription.aggregate([
+//             {
+//                 $match: {
+//                     createdAt: {
+//                         $gte: startDate,
+//                         $lt: endDate,
+//                     },
+//                 },
+//             },
+//             {
+//                 $group: {
+//                     _id: {
+//                         month: { $month: '$createdAt' },
+//                         year: { $year: '$createdAt' },
+//                     },
+//                     count: { $sum: 1 },
+//                 },
+//             },
+//             {
+//                 $project: {
+//                     _id: 0,
+//                     month: '$_id.month',
+//                     year: '$_id.year',
+//                     count: 1,
+//                 },
+//             },
+//             {
+//                 $sort: { month: 1 },
+//             },
+//         ]);
 
-        const months = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-        ];
+//         const months = [
+//             'Jan',
+//             'Feb',
+//             'Mar',
+//             'Apr',
+//             'May',
+//             'Jun',
+//             'Jul',
+//             'Aug',
+//             'Sep',
+//             'Oct',
+//             'Nov',
+//             'Dec',
+//         ];
 
-        const result = Array.from({ length: 12 }, (_, i) => {
-            const monthData = monthlySubscriptionGrowth.find(
-                data => data.month === i + 1,
-            ) || { month: i + 1, count: 0, year: selectedYear };
-            return {
-                ...monthData,
-                month: months[i],
-            };
-        });
+//         const result = Array.from({ length: 12 }, (_, i) => {
+//             const monthData = monthlySubscriptionGrowth.find(
+//                 data => data.month === i + 1,
+//             ) || { month: i + 1, count: 0, year: selectedYear };
+//             return {
+//                 ...monthData,
+//                 month: months[i],
+//             };
+//         });
 
-        return {
-            year: selectedYear,
-            data: result,
-        };
-    } catch (error) {
-        console.error('Error in getMonthlySubscriptionGrowth function: ', error);
-        throw error;
-    }
-};
+//         return {
+//             year: selectedYear,
+//             data: result,
+//         };
+//     } catch (error) {
+//         console.error('Error in getMonthlySubscriptionGrowth function: ', error);
+//         throw error;
+//     }
+// };
 
 const getMonthlyUserGrowth = async (year?: number) => {
     try {
@@ -210,44 +208,8 @@ const getAllUser = async (query: any) => {
 
 };
 
-// =Subscriptions =================================
-const createSubscriptions = async (payload: ISubscriptions) => {
-    try {
-        const subscription = new Subscription(payload);
-        await subscription.save();
-        return subscription;
-    } catch (error: any) {
-        throw new ApiError(400, `Error creating subscription: ${error.message}`);
-    }
-
-};
-
-const updateSubscription = async (id: string, payload: Partial<ISubscriptions>) => {
-    try {
-        const updatedSubscription = await Subscription.findByIdAndUpdate(id, payload, { new: true });
-        if (!updatedSubscription) {
-            throw new ApiError(404, 'Subscription not found');
-        }
-        return updatedSubscription;
-    } catch (error: any) {
-        throw new ApiError(400, `Error updating subscription: ${error.message}`);
-    }
-};
-
-const deleteSubscription = async (id: string) => {
-    try {
-        const deletedSubscription = await Subscription.findByIdAndDelete(id);
-        if (!deletedSubscription) {
-            throw new ApiError(404, 'Subscription not found');
-        }
-        return deletedSubscription;
-    } catch (error: any) {
-        throw new ApiError(400, `Error deleting subscription: ${error.message}`);
-    }
-};
-
-// ===================================
-const addsInsertIntoDB = async (files: any, payload: IAdds) => {
+// Adds ===================================
+const cuisineInsertIntoDB = async (files: any, payload: ICuisine) => {
     if (!files?.image) {
         throw new ApiError(400, 'File is missing');
     }
@@ -256,12 +218,17 @@ const addsInsertIntoDB = async (files: any, payload: IAdds) => {
         payload.image = `/images/image/${files.image[0].filename}`;
     }
 
-    return await Adds.create(payload);
+
+    if (!payload?.title) {
+        throw new ApiError(400, 'Title is missing');
+    }
+
+    return await Cuisine.create(payload);
 };
 
-const allAdds = async (query: Record<string, unknown>) => {
-    const addsQuery = new QueryBuilder(Adds.find(), query)
-        .search([])
+const allCuisine = async (query: Record<string, unknown>) => {
+    const addsQuery = new QueryBuilder(Cuisine.find(), query)
+        .search(['title'])
         .filter()
         .sort()
         .paginate()
@@ -276,26 +243,26 @@ const allAdds = async (query: Record<string, unknown>) => {
     };
 };
 
-const updateAdds = async (req: any) => {
+const updateCuisine = async (req: any) => {
     const { files } = req as any;
     const id = req.params.id;
-    const { ...AddsData } = req.body;
+    const { ...CuisineData } = req.body;
 
-    console.log("AddsData", AddsData)
+    console.log("CuisineData", CuisineData)
 
     if (files && files.image) {
-        AddsData.image = `/images/image/${files.image[0].filename}`;
+        CuisineData.image = `/images/image/${files.image[0].filename}`;
     }
 
-    const isExist = await Adds.findOne({ _id: id });
+    const isExist = await Cuisine.findOne({ _id: id });
 
     if (!isExist) {
-        throw new ApiError(404, 'Adds not found !');
+        throw new ApiError(404, 'Cuisine not found !');
     }
 
-    const result = await Adds.findOneAndUpdate(
+    const result = await Cuisine.findOneAndUpdate(
         { _id: id },
-        { ...AddsData },
+        { ...CuisineData },
         {
             new: true,
         },
@@ -304,15 +271,85 @@ const updateAdds = async (req: any) => {
     return result;
 };
 
-const deleteAdds = async (id: string) => {
-    const isExist = await Adds.findOne({ _id: id });
+const deleteCuisine = async (id: string) => {
+    const isExist = await Cuisine.findOne({ _id: id });
+    if (!isExist) {
+        throw new ApiError(404, 'Cuisine not found !');
+    }
+    return await Cuisine.findByIdAndDelete(id);
+};
+
+// Vibe ===================================
+const createVibeIntoDB = async (files: any, payload: IVibe) => {
+    if (!files?.image) {
+        throw new ApiError(400, 'File is missing');
+    }
+
+    if (files?.image) {
+        payload.image = `/images/image/${files.image[0].filename}`;
+    }
+
+    if (!payload?.name) {
+        throw new ApiError(400, 'Name is missing');
+    }
+
+    return await Vibe.create(payload);
+}
+
+const updateVibes = async (req: any) => {
+    const { files } = req as any;
+    const id = req.params.id;
+    const { ...VibesData } = req.body;
+
+    console.log("VibesData", VibesData)
+
+    if (files && files.image) {
+        VibesData.image = `/images/image/${files.image[0].filename}`;
+    }
+
+    const isExist = await Vibe.findOne({ _id: id });
+
     if (!isExist) {
         throw new ApiError(404, 'Adds not found !');
     }
-    return await Adds.findByIdAndDelete(id);
+
+    const result = await Vibe.findOneAndUpdate(
+        { _id: id },
+        { ...VibesData },
+        {
+            new: true,
+        },
+    );
+    console.log("result", result)
+    return result;
 };
 
-//! Faqs
+const allVibes = async (query: Record<string, unknown>) => {
+    const addsQuery = new QueryBuilder(Vibe.find(), query)
+        .search(['name'])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await addsQuery.modelQuery;
+    const meta = await addsQuery.countTotal();
+
+    return {
+        meta,
+        data: result,
+    };
+};
+
+const deleteVibes = async (id: string) => {
+    const isExist = await Vibe.findOne({ _id: id });
+    if (!isExist) {
+        throw new ApiError(404, 'Adds not found !');
+    }
+    return await Vibe.findByIdAndDelete(id);
+};
+
+// =Faqs========================================
 const addFaq = async (payload: any) => {
 
     if (!payload?.questions || !payload?.answer) {
@@ -407,28 +444,45 @@ const getPrivacyPolicy = async () => {
     return await PrivacyPolicy.findOne();
 };
 
+const createRestaurant = async (req: Request, payload: IRestaurant) => {
+    const { files } = req as any;
 
-// getAllRecipes,
-// createRecipes,
-// updateRecipes,
-// deleteRecipe,
-// getMyRecipes,
-// getRecipeDetails,
-// getRecipesForYou,
-// sendMessageSupport,
-// getAllMessagesSupport,
-// toggleFavorite,
-// getUserFavorites
+    const coordinates = { lng: -77.0369, lat: 38.8075 }
+
+    // const { coordinates } = payload as any;
+
+    if (!coordinates.lng || !coordinates.lat) {
+        throw new ApiError(httpStatus.BAD_REQUEST, "Location coordinates are required.");
+    }
+
+    if (files?.cover_photo && files.cover_photo[0]) {
+        payload.cover_photo = `/images/restaurant/${files.cover_photo[0].filename}`;
+    }
+
+    if (files?.gallery_photo && files.gallery_photo?.length) {
+        payload.gallery_photo = files.gallery_photo.map((file: any) =>
+            `/images/restaurant/${file.filename}`
+        );
+    }
+
+    payload.locations = {
+        type: 'Point',
+        coordinates: [coordinates.lng, coordinates.lat],
+    } as ICoordinates;
+
+    const restaurant = await Restaurant.create(payload);
+
+    return restaurant
+
+};
 
 export const DashboardService = {
     totalCount,
     getAllUser,
-    createSubscriptions,
-    updateSubscription,
-    addsInsertIntoDB,
-    allAdds,
-    updateAdds,
-    deleteAdds,
+    cuisineInsertIntoDB,
+    allCuisine,
+    updateCuisine,
+    deleteCuisine,
     addFaq,
     updateFaq,
     deleteFaq,
@@ -437,12 +491,15 @@ export const DashboardService = {
     getTermsConditions,
     addPrivacyPolicy,
     getPrivacyPolicy,
-    getMonthlySubscriptionGrowth,
     getMonthlyUserGrowth,
-    deleteSubscription,
     addHelpSupport,
     getHelpSupport,
     addAboutUs,
-    getAboutUs
+    getAboutUs,
+    createVibeIntoDB,
+    deleteVibes,
+    allVibes,
+    updateVibes,
+    createRestaurant
 
 };

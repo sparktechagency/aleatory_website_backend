@@ -15,6 +15,10 @@ export const uploadFile = () => {
         uploadPath = 'uploads/images/profile';
       } else if (file.fieldname === 'product_img') {
         uploadPath = 'uploads/images/products';
+      } else if (file.fieldname === 'cover_photo') {
+        uploadPath = 'uploads/images/restaurant';
+      } else if (file.fieldname === 'gallery_photo') {
+        uploadPath = 'uploads/images/restaurant';
       } else if (file.fieldname === 'image') {
         uploadPath = 'uploads/images/image';
       } else if (file.fieldname === 'message_img') {
@@ -58,6 +62,8 @@ export const uploadFile = () => {
       'thumbnail',
       'video_thumbnail',
       'message_img',
+      "gallery_photo",
+      "cover_photo"
     ];
 
     if (file.fieldname === undefined) {
@@ -91,7 +97,8 @@ export const uploadFile = () => {
     { name: 'video_thumbnail', maxCount: 1 },
     { name: 'thumbnail', maxCount: 1 },
     { name: 'message_img', maxCount: 10 },
-  ]);
+    { name: 'cover_photo', maxCount: 1 },
+    { name: 'gallery_photo', maxCount: 10 },]);
 
   return upload;
 };

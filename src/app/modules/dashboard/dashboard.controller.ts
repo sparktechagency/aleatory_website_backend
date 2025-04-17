@@ -2,29 +2,13 @@ import { Request, RequestHandler, Response } from 'express';
 import sendResponse from '../../../shared/sendResponse';
 import catchAsync from '../../../shared/catchasync';
 import { DashboardService } from './dashboard.service';
-import { IAdds, ISubscriptions } from './dsashbaord.interface';
-import { Subscription } from './dashboard.model';
+import { ICuisine, IRestaurant, ISubscriptions, IVibe } from './dsashbaord.interface';
 import { IReqUser } from '../auth/auth.interface';
-
 
 
 const totalCount: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const result = await DashboardService.totalCount();
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: `Get all count sucess!`,
-      data: result,
-    });
-  },
-);
-const getMonthlySubscriptionGrowth: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const year = req.query.year
-      ? parseInt(req.query.year as string, 10)
-      : undefined;
-    const result = await DashboardService.getMonthlySubscriptionGrowth(year);
     sendResponse(res, {
       statusCode: 200,
       success: true,
@@ -48,8 +32,7 @@ const getMonthlyUserGrowth: RequestHandler = catchAsync(
     });
   },
 );
-
-
+// =User Management====================================
 const getAllUser: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const query = req.query as any;
@@ -62,101 +45,92 @@ const getAllUser: RequestHandler = catchAsync(
     });
   },
 );
-
-const createSubscriptions: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const body = req.body as any;
-    const result = await DashboardService.createSubscriptions(body as any);
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: `Create Sucessfully!`,
-      data: result,
-    });
-  },
-);
-
-const updateSubscription: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const body = req.body as ISubscriptions;
-    const id = req.params.id
-    const result = await DashboardService.updateSubscription(id as string, body as ISubscriptions);
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: `Update Sucessfully!`,
-      data: result,
-    });
-  },
-);
-
-const deleteSubscription: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const id = req.params.id
-    const result = await DashboardService.deleteSubscription(id as string);
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: `Delate sucessfully`,
-      data: result,
-    });
-  },
-);
-
-const getAllSubscription: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const result = await Subscription.find();
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: `Delate sucessfully`,
-      data: result,
-    });
-  },
-);
-
-// ===============================================================
-
-const addsInsertIntoDB = catchAsync(async (req: Request, res: Response) => {
-  const result = await DashboardService.addsInsertIntoDB(req.files, req.body);
-  sendResponse<IAdds>(res, {
+// =Cuisine Types======================================
+// =Vibe Management==================================== 
+const createVibeIntoDB = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.createVibeIntoDB(req.files, req.body);
+  sendResponse<IVibe>(res, {
     statusCode: 200,
     success: true,
-    message: 'Adds create successfully',
+    message: 'Vibe create successfully',
     data: result,
   });
 });
 
-const updateAdds = catchAsync(async (req: Request, res: Response) => {
-  const result = await DashboardService.updateAdds(req);
-  sendResponse<IAdds>(res, {
+const updateVibes = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.updateVibes(req);
+  sendResponse<IVibe>(res, {
     statusCode: 200,
     success: true,
-    message: 'Adds update successfully',
+    message: 'Vibe update successfully',
     data: result,
   });
 });
 
-const deleteAdds = catchAsync(async (req: Request, res: Response) => {
-  const result = await DashboardService.deleteAdds(req.params.id);
-  sendResponse<IAdds>(res, {
+const allVibes = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.allVibes(req.query);
+  sendResponse<IVibe[]>(res, {
     statusCode: 200,
     success: true,
-    message: 'Adds delete successfully',
-    data: result,
-  });
-});
-
-const allAdds = catchAsync(async (req: Request, res: Response) => {
-  const result = await DashboardService.allAdds(req.query);
-  sendResponse<IAdds[]>(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Adds Retrieved successfully',
+    message: 'Vibe Retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
 });
+
+const deleteVibes = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.deleteVibes(req.params.id);
+  sendResponse<IVibe>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Vibes delete successfully',
+    data: result,
+  });
+});
+
+// ============================================================ 
+
+const cuisineInsertIntoDB = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.cuisineInsertIntoDB(req.files, req.body);
+  sendResponse<ICuisine>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Cuisine create successfully',
+    data: result,
+  });
+});
+
+const updateCuisine = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.updateCuisine(req);
+  sendResponse<ICuisine>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Cuisine update successfully',
+    data: result,
+  });
+});
+
+const deleteCuisine = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.deleteCuisine(req.params.id);
+  sendResponse<ICuisine>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Cuisine delete successfully',
+    data: result,
+  });
+});
+
+const allCuisine = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.allCuisine(req.query);
+  sendResponse<ICuisine[]>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Cuisine Retrieved successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 // ===========================
 const addFaq = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.addFaq(req.body);
@@ -167,6 +141,7 @@ const addFaq = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const updateFaq = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.updateFaq(req);
   sendResponse(res, {
@@ -176,6 +151,7 @@ const updateFaq = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const deleteFaq = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.deleteFaq(req);
   sendResponse(res, {
@@ -185,6 +161,7 @@ const deleteFaq = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getFaq = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.getFaq();
   sendResponse(res, {
@@ -204,6 +181,7 @@ const addTermsConditions = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getTermsConditions = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.getTermsConditions();
   sendResponse(res, {
@@ -223,6 +201,7 @@ const addAboutUs = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getAboutUs = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.getAboutUs();
   sendResponse(res, {
@@ -242,6 +221,7 @@ const addHelpSupport = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getHelpSupport = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.getHelpSupport();
   sendResponse(res, {
@@ -252,7 +232,6 @@ const getHelpSupport = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
 const addPrivacyPolicy = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.addPrivacyPolicy(req.body);
   sendResponse(res, {
@@ -262,6 +241,7 @@ const addPrivacyPolicy = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getPrivacyPolicy = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.getPrivacyPolicy();
   sendResponse(res, {
@@ -272,18 +252,26 @@ const getPrivacyPolicy = catchAsync(async (req: Request, res: Response) => {
   });
 });
 // ================================
+const createRestaurant = catchAsync(async (req: Request, res: Response) => {
+  const payload = req.body as IRestaurant;
+  const result = await DashboardService.createRestaurant(req as any, payload);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Create Successfully',
+    data: result,
+  });
+});
+
+// ================================
 
 
 export const DashboardController = {
   getAllUser,
-  createSubscriptions,
-  updateSubscription,
-  deleteSubscription,
-  getAllSubscription,
-  addsInsertIntoDB,
-  updateAdds,
-  deleteAdds,
-  allAdds,
+  cuisineInsertIntoDB,
+  updateCuisine,
+  deleteCuisine,
+  allCuisine,
   getFaq,
   deleteFaq,
   updateFaq,
@@ -293,11 +281,15 @@ export const DashboardController = {
   addPrivacyPolicy,
   getPrivacyPolicy,
   totalCount,
-  getMonthlySubscriptionGrowth,
   getMonthlyUserGrowth,
   addHelpSupport,
   getHelpSupport,
   addAboutUs,
-  getAboutUs
+  getAboutUs,
+  createVibeIntoDB,
+  deleteVibes,
+  updateVibes,
+  allVibes,
+  createRestaurant
 
 };
