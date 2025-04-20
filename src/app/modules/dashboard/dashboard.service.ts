@@ -390,6 +390,7 @@ const addTermsConditions = async (payload: any) => {
         return await TermsConditions.create(payload);
     }
 };
+
 const getTermsConditions = async () => {
     return await TermsConditions.findOne();
 };
@@ -406,6 +407,7 @@ const addHelpSupport = async (payload: any) => {
         return await HelpSupport.create(payload);
     }
 };
+
 const getHelpSupport = async () => {
     const result = await HelpSupport.findOne();
     return result
@@ -422,6 +424,7 @@ const addAboutUs = async (payload: any) => {
         return await AboutUs.create(payload);
     }
 };
+
 const getAboutUs = async () => {
     const result = await AboutUs.findOne();
     return result
@@ -444,6 +447,7 @@ const getPrivacyPolicy = async () => {
     return await PrivacyPolicy.findOne();
 };
 
+// ==========================
 const createRestaurant = async (req: Request, payload: IRestaurant) => {
     const { files } = req as any;
 
@@ -473,9 +477,98 @@ const createRestaurant = async (req: Request, payload: IRestaurant) => {
     const restaurant = await Restaurant.create(payload);
 
     return restaurant
-
 };
 
+const updateRestaurant = async (id: string, req: Request, payload: Partial<IRestaurant>) => {
+    const { files } = req as any;
+
+    if (files?.cover_photo && files.cover_photo[0]) {
+        payload.cover_photo = `/images/restaurant/${files.cover_photo[0].filename}`;
+    }
+
+    if (files?.gallery_photo && files.gallery_photo?.length) {
+        payload.gallery_photo = files.gallery_photo.map((file: any) =>
+            `/images/restaurant/${file.filename}`
+        );
+    }
+
+    if (payload.coordinates) {
+        if (!payload.coordinates?.lng || !payload.coordinates?.lat) {
+            throw new ApiError(httpStatus.BAD_REQUEST, "Valid coordinates are required(Check lng and lat).");
+        }
+
+        payload.locations = {
+            type: 'Point',
+            coordinates: [payload.coordinates?.lng, payload.coordinates?.lat],
+        } as ICoordinates;
+    }
+
+    const updatedRestaurant = await Restaurant.findByIdAndUpdate(id, payload, {
+        new: true,
+        runValidators: true,
+    });
+
+    if (!updatedRestaurant) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found.');
+    }
+
+    return updatedRestaurant;
+};
+
+const deleteRestaurant = async (id: string) => {
+    const deletedRestaurant = await Restaurant.findByIdAndDelete(id);
+
+    if (!deletedRestaurant) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found.');
+    }
+
+    return deletedRestaurant;
+};
+
+
+
+const getAllRestaurant = async (query: Record<string, unknown>) => {
+    const restaurantQuery = new QueryBuilder(Restaurant.find(), query)
+        .search(['name'])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await restaurantQuery.modelQuery;
+    const meta = await restaurantQuery.countTotal();
+
+    return {
+        meta,
+        data: result,
+    };
+};
+
+const allVibesWithoutPagination = async (query: Record<string, unknown>) => {
+    console.log("query", query)
+    const addsQuery = new QueryBuilder(Vibe.find(), query)
+        .search(['name'])
+        .filter()
+
+    const result = await addsQuery.modelQuery;
+
+    return {
+        data: result,
+    };
+};
+
+const allCuisineWithoutPagination = async (query: Record<string, unknown>) => {
+    console.log("query", query)
+    const addsQuery = new QueryBuilder(Cuisine.find(), query)
+        .search(['name'])
+        .filter()
+
+    const result = await addsQuery.modelQuery;
+
+    return {
+        data: result,
+    };
+};
 export const DashboardService = {
     totalCount,
     getAllUser,
@@ -500,6 +593,10 @@ export const DashboardService = {
     deleteVibes,
     allVibes,
     updateVibes,
-    createRestaurant
-
+    createRestaurant,
+    deleteRestaurant,
+    updateRestaurant,
+    getAllRestaurant,
+    allVibesWithoutPagination,
+    allCuisineWithoutPagination
 };

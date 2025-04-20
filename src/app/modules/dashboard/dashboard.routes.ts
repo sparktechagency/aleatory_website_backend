@@ -108,6 +108,23 @@ router.post('/create_restaurant',
   uploadFile(),
   DashboardController.createRestaurant,
 );
+router.patch('/update_restaurant/:id',
+  uploadFile(),
+  DashboardController.updateRestaurant,
+);
+router.delete('/delete_restaurant/:id',
+  DashboardController.deleteRestaurant,
+);
+router.get('/get_all_restaurant',
+  DashboardController.getAllRestaurant,
+);
+router.get('/all_vibes_without_pagination',
+  DashboardController.allVibesWithoutPagination,
+);
+router.get('/all_cuisine_without_pagination',
+  DashboardController.allCuisineWithoutPagination,
+);
+
 
 
 // ==============================

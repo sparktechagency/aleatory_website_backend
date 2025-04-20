@@ -32,6 +32,7 @@ const getMonthlyUserGrowth: RequestHandler = catchAsync(
     });
   },
 );
+
 // =User Management====================================
 const getAllUser: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
@@ -45,7 +46,8 @@ const getAllUser: RequestHandler = catchAsync(
     });
   },
 );
-// =Cuisine Types======================================
+
+// =Vibes Types Management======================================
 // =Vibe Management==================================== 
 const createVibeIntoDB = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.createVibeIntoDB(req.files, req.body);
@@ -88,8 +90,7 @@ const deleteVibes = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// ============================================================ 
-
+// =Cuisine Types Management=========================================================== 
 const cuisineInsertIntoDB = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.cuisineInsertIntoDB(req.files, req.body);
   sendResponse<ICuisine>(res, {
@@ -131,7 +132,7 @@ const allCuisine = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// ===========================
+// =FAQ==========================
 const addFaq = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.addFaq(req.body);
   sendResponse(res, {
@@ -172,6 +173,7 @@ const getFaq = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// =Settings==========================
 const addTermsConditions = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.addTermsConditions(req.body);
   sendResponse(res, {
@@ -251,7 +253,8 @@ const getPrivacyPolicy = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-// ================================
+
+// =Restaurant Management===============================
 const createRestaurant = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body as IRestaurant;
   const result = await DashboardService.createRestaurant(req as any, payload);
@@ -262,6 +265,62 @@ const createRestaurant = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const updateRestaurant = catchAsync(async (req: Request, res: Response) => {
+  const payload = req.body as IRestaurant;
+  const id = req.params.id as string;
+  const result = await DashboardService.updateRestaurant(id as string, req as any, payload);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Update Successfully',
+    data: result,
+  });
+});
+
+const deleteRestaurant = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const result = await DashboardService.deleteRestaurant(id as any);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Create Successfully',
+    data: result,
+  });
+});
+
+const getAllRestaurant = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query as any;
+  const result = await DashboardService.getAllRestaurant(query as any);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Get Successfully',
+    data: result,
+  });
+});
+
+const allVibesWithoutPagination = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.allVibesWithoutPagination(req.query);
+  sendResponse<IVibe[]>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Vibe Retrieved successfully',
+    data: result.data,
+  });
+});
+
+const allCuisineWithoutPagination = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.allCuisineWithoutPagination(req.query);
+  sendResponse<ICuisine[]>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Cuisine Retrieved successfully',
+    data: result.data,
+  });
+});
+
+
 
 // ================================
 
@@ -290,6 +349,10 @@ export const DashboardController = {
   deleteVibes,
   updateVibes,
   allVibes,
-  createRestaurant
-
+  createRestaurant,
+  updateRestaurant,
+  deleteRestaurant,
+  getAllRestaurant,
+  allVibesWithoutPagination,
+  allCuisineWithoutPagination
 };
