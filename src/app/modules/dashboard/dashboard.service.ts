@@ -5,7 +5,6 @@ import User from "../user/user.model";
 import { AboutUs, Cuisine, Faq, HelpSupport, PrivacyPolicy, Restaurant, TermsConditions, Vibe } from "./dashboard.model";
 import { ICoordinates, ICuisine, IRestaurant, IVibe } from "./dsashbaord.interface";
 import { logger } from "../../../shared/logger";
-import { Transaction } from "../payment/payment.model";
 import httpStatus from "http-status";
 
 // ===========================================
@@ -16,97 +15,14 @@ const getYearRange = (year: any) => {
 };
 
 const totalCount = async () => {
-
-    const totalIncome = await Transaction.aggregate([
-        {
-            $group: {
-                _id: null,
-                total: { $sum: '$amount' },
-            },
-        },
-    ]);
-
     const totalUsers = await User.countDocuments();
     // const totalRecipe = await Recipe.countDocuments();
 
     return {
-        totalIncome: totalIncome.length > 0 ? totalIncome[0].total : 0,
         totalUsers,
         // totalRecipe
     };
 };
-
-//     try {
-//         const currentYear = new Date().getFullYear();
-//         const selectedYear = year || currentYear;
-
-//         const { startDate, endDate } = getYearRange(selectedYear);
-
-//         const monthlySubscriptionGrowth = await Subscription.aggregate([
-//             {
-//                 $match: {
-//                     createdAt: {
-//                         $gte: startDate,
-//                         $lt: endDate,
-//                     },
-//                 },
-//             },
-//             {
-//                 $group: {
-//                     _id: {
-//                         month: { $month: '$createdAt' },
-//                         year: { $year: '$createdAt' },
-//                     },
-//                     count: { $sum: 1 },
-//                 },
-//             },
-//             {
-//                 $project: {
-//                     _id: 0,
-//                     month: '$_id.month',
-//                     year: '$_id.year',
-//                     count: 1,
-//                 },
-//             },
-//             {
-//                 $sort: { month: 1 },
-//             },
-//         ]);
-
-//         const months = [
-//             'Jan',
-//             'Feb',
-//             'Mar',
-//             'Apr',
-//             'May',
-//             'Jun',
-//             'Jul',
-//             'Aug',
-//             'Sep',
-//             'Oct',
-//             'Nov',
-//             'Dec',
-//         ];
-
-//         const result = Array.from({ length: 12 }, (_, i) => {
-//             const monthData = monthlySubscriptionGrowth.find(
-//                 data => data.month === i + 1,
-//             ) || { month: i + 1, count: 0, year: selectedYear };
-//             return {
-//                 ...monthData,
-//                 month: months[i],
-//             };
-//         });
-
-//         return {
-//             year: selectedYear,
-//             data: result,
-//         };
-//     } catch (error) {
-//         console.error('Error in getMonthlySubscriptionGrowth function: ', error);
-//         throw error;
-//     }
-// };
 
 const getMonthlyUserGrowth = async (year?: number) => {
     try {

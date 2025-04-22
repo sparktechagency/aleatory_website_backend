@@ -16,7 +16,7 @@ export interface INutritional {
   sugars: number;
   saturated_fat: number;
   sodium: number;
-}
+};
 
 export interface IRecipe extends Document {
   name: string;
