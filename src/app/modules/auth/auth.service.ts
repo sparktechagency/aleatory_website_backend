@@ -183,7 +183,7 @@ const loginAccount = async (payload: LoginPayload) => {
     isAuth.password &&
     !(await Auth.isPasswordMatched(password, isAuth.password))
   ) {
-    throw new ApiError(401, "Password is incorrect");
+    throw new ApiError(400, "Password is incorrect");
   }
 
   const { _id: authId } = isAuth;

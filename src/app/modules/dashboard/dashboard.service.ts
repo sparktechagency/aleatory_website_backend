@@ -292,14 +292,17 @@ const updateFaq = async (req: any) => {
 
     return result
 };
+
 const deleteFaq = async (req: any) => {
     const id = req.params.id
     return await Faq.findByIdAndDelete(id);
 };
+
 const getFaq = async () => {
     return await Faq.find();
 };
-// ==============
+
+// ================================================
 const addTermsConditions = async (payload: any) => {
     const checkIsExist = await TermsConditions.findOne();
     if (checkIsExist) {
@@ -488,6 +491,7 @@ const allCuisineWithoutPagination = async (query: Record<string, unknown>) => {
         data: result,
     };
 };
+
 export const DashboardService = {
     totalCount,
     getAllUser,
