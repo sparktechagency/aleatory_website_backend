@@ -15,6 +15,11 @@ router.get('/get_user_growth',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   DashboardController.getMonthlyUserGrowth,
 );
+router.get('/top_restaurants',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  DashboardController.getTopRestaurants,
+);
+
 // =============================
 router.get('/get_all_user',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),

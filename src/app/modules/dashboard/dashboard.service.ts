@@ -16,12 +16,30 @@ const getYearRange = (year: any) => {
 
 const totalCount = async () => {
     const totalUsers = await User.countDocuments();
-    // const totalRecipe = await Recipe.countDocuments();
+    const totalRestaurant = await Restaurant.countDocuments();
 
     return {
         totalUsers,
-        // totalRecipe
+        totalRestaurant
     };
+};
+
+const getTopRestaurants = async () => {
+    const result = await Restaurant.aggregate([
+        {
+            $addFields: {
+                favoritesCount: { $size: { $ifNull: ["$favorites", []] } },
+            },
+        },
+        {
+            $sort: { favoritesCount: -1 },
+        },
+        {
+            $limit: 5,
+        },
+    ]);
+
+    return result;
 };
 
 const getMonthlyUserGrowth = async (year?: number) => {
@@ -62,20 +80,7 @@ const getMonthlyUserGrowth = async (year?: number) => {
             },
         ]);
 
-        const months = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-        ];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         const result = [];
         for (let i = 1; i <= 12; i++) {
@@ -441,8 +446,6 @@ const deleteRestaurant = async (id: string) => {
     return deletedRestaurant;
 };
 
-
-
 const getAllRestaurant = async (query: Record<string, unknown>) => {
     const restaurantQuery = new QueryBuilder(Restaurant.find(), query)
         .search(['name'])
@@ -489,6 +492,7 @@ export const DashboardService = {
     totalCount,
     getAllUser,
     cuisineInsertIntoDB,
+    getTopRestaurants,
     allCuisine,
     updateCuisine,
     deleteCuisine,

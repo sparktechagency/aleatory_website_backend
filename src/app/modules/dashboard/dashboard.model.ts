@@ -184,6 +184,11 @@ const restaurantsSchema = new Schema<IRestaurant>(
         locations: {
             type: Coordinates,
             required: true
+        },
+        favorites: {
+            type: [Schema.Types.ObjectId],
+            ref: 'Auth',
+            default: [],
         }
     },
     { timestamps: true }

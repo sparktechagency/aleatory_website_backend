@@ -96,7 +96,8 @@ export type IRestaurant = {
   signature: string;
   locations: ICoordinates;
   gallery_photo: string[];
-  coordinates: any
+  coordinates: any;
+  favorites: Types.ObjectId[]
 }
 
 

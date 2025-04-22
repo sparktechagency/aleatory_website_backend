@@ -27,11 +27,24 @@ const getMonthlyUserGrowth: RequestHandler = catchAsync(
     sendResponse(res, {
       statusCode: 200,
       success: true,
-      message: `Get all count sucess!`,
+      message: `Get all count success!`,
       data: result,
     });
   },
 );
+
+const getTopRestaurants: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await DashboardService.getTopRestaurants();
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: `Get Top Restaurants!`,
+      data: result,
+    });
+  },
+);
+
 
 // =User Management====================================
 const getAllUser: RequestHandler = catchAsync(
@@ -328,6 +341,7 @@ const allCuisineWithoutPagination = catchAsync(async (req: Request, res: Respons
 export const DashboardController = {
   getAllUser,
   cuisineInsertIntoDB,
+  getTopRestaurants,
   updateCuisine,
   deleteCuisine,
   allCuisine,
