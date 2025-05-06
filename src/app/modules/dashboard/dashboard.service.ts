@@ -494,7 +494,6 @@ const allCuisineWithoutPagination = async (query: Record<string, unknown>) => {
     };
 };
 
-
 const getRestaurants = async (query: Record<string, unknown>) => {
     const res = await axios.get('https://api.yelp.com/v3/businesses/search', {
         headers: {
@@ -512,6 +511,7 @@ const getRestaurants = async (query: Record<string, unknown>) => {
     return res.data.businesses
 
 };
+
 export const DashboardService = {
     totalCount,
     getAllUser,
