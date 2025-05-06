@@ -130,7 +130,9 @@ router.get('/all_cuisine_without_pagination',
   DashboardController.allCuisineWithoutPagination,
 );
 
-
+router.get('/get_all_restaurants',
+  DashboardController.getRestaurants,
+);
 
 // ==============================
 

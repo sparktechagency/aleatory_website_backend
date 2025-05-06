@@ -8,7 +8,7 @@ dotenv.config({
 export default {
   env: process.env.NODE_ENV,
   port: process.env.PORT,
-  app_name:process.env.APP_NAME,
+  app_name: process.env.APP_NAME,
   socket_port: process.env.SOCKET_PORT,
   ip: process.env.IP,
   base_url: process.env.BASE_URL,
@@ -40,6 +40,9 @@ export default {
   sendgrid: {
     from_email: process.env.FORM_EMAIL,
     api_key: process.env.SEND_GRIDAPI_KEY,
+  },
+  yelp: {
+    secret_key: process.env.YELP_SECRET_KEY
   },
   stripe: {
     stripe_secret_key: process.env.STRIPE_SECRET_KEY,

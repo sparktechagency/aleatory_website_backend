@@ -6,6 +6,8 @@ import { AboutUs, Cuisine, Faq, HelpSupport, PrivacyPolicy, Restaurant, TermsCon
 import { ICoordinates, ICuisine, IRestaurant, IVibe } from "./dsashbaord.interface";
 import { logger } from "../../../shared/logger";
 import httpStatus from "http-status";
+import axios from "axios";
+import config from "../../../config";
 
 // ===========================================
 const getYearRange = (year: any) => {
@@ -492,6 +494,24 @@ const allCuisineWithoutPagination = async (query: Record<string, unknown>) => {
     };
 };
 
+
+const getRestaurants = async (query: Record<string, unknown>) => {
+    const res = await axios.get('https://api.yelp.com/v3/businesses/search', {
+        headers: {
+            Authorization: `Bearer ${config.yelp.secret_key}`,
+        },
+        params: {
+            term: 'restaurant',
+            location: 'New York',
+            limit: 10
+        }
+    });
+
+    console.log(res.data.businesses);
+
+    return res.data.businesses
+
+};
 export const DashboardService = {
     totalCount,
     getAllUser,
@@ -522,5 +542,6 @@ export const DashboardService = {
     updateRestaurant,
     getAllRestaurant,
     allVibesWithoutPagination,
-    allCuisineWithoutPagination
+    allCuisineWithoutPagination,
+    getRestaurants
 };

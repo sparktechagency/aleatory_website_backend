@@ -45,7 +45,6 @@ const getTopRestaurants: RequestHandler = catchAsync(
   },
 );
 
-
 // =User Management====================================
 const getAllUser: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
@@ -334,6 +333,18 @@ const allCuisineWithoutPagination = catchAsync(async (req: Request, res: Respons
 });
 
 
+// ===========================================
+const getRestaurants = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.getRestaurants(req.query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Retrieved successfully',
+    data: result,
+  });
+});
+
+
 
 // ================================
 
@@ -368,5 +379,6 @@ export const DashboardController = {
   deleteRestaurant,
   getAllRestaurant,
   allVibesWithoutPagination,
-  allCuisineWithoutPagination
+  allCuisineWithoutPagination,
+  getRestaurants
 };
