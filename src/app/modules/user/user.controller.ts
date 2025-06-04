@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { UserService } from "./user.service";
-import sendResponse from "../../../shared/sendResponse";
 import catchAsync from "../../../shared/catchasync";
 import { IReqUser } from "../auth/auth.interface";
+import sendResponse from "../../../shared/sendResponse";
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.updateMyProfile(req as any);

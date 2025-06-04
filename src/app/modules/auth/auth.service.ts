@@ -190,7 +190,6 @@ const loginAccount = async (payload: LoginPayload) => {
   let userDetails: any;
   let role;
 
-  console.log("role", role)
   switch (isAuth.role) {
     case ENUM_USER_ROLE.USER:
       userDetails = await User.findOne({ authId: isAuth._id }).populate("authId");
@@ -221,12 +220,12 @@ const loginAccount = async (payload: LoginPayload) => {
   );
 
   return {
-    id: isAuth._id,
-    conversationId: isAuth.conversationId,
-    isPaid: isAuth.isPaid,
+    // id: isAuth._id,
+    // conversationId: isAuth.conversationId,
+    // isPaid: isAuth.isPaid,
     accessToken,
     refreshToken,
-    user: userDetails,
+    // user: userDetails,
   };
 };
 
@@ -267,6 +266,7 @@ const forgotPass = async (payload: { email: string }) => {
 const checkIsValidForgetActivationCode = async (payload: { email: string; code: string }) => {
 
   const account: any = await Auth.findOne({ email: payload.email }) as IAuth;
+  console.log("=payload", payload)
   if (!account) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Account does not exist!");
   }
@@ -324,6 +324,7 @@ const changePassword = async (user: { authId: string }, payload: ChangePasswordP
   if (newPassword !== confirmPassword) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Password and confirm password do not match");
   }
+  console.log("=payload", user, payload)
   const isUserExist = await Auth.findById(authId).select("+password");
   if (!isUserExist) {
     throw new ApiError(404, "Account does not exist!");
@@ -559,7 +560,6 @@ const blockUnblockAuthUser = async (payload: {
   role: string, email: string, is_block: boolean
 }) => {
   const { role, email, is_block } = payload;
-  console.log("USER", role, email, is_block)
   try {
     const updatedAuth = await Auth.findOneAndUpdate(
       { email: email, role: role },

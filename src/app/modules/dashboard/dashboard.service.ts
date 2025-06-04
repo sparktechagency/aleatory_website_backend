@@ -1,4 +1,3 @@
-
 import QueryBuilder from "../../../builder/QueryBuilder";
 import ApiError from "../../../errors/ApiError";
 import User from "../user/user.model";
@@ -114,7 +113,10 @@ const getAllUser = async (query: any) => {
     if (query?.searchTerm) {
         delete query.page;
     }
-    const userQuery = new QueryBuilder(User.find()
+    const userQuery = new QueryBuilder(User.find().populate({
+        path: "authId",
+        select: "is_block"
+    })
         , query)
         .search(["name", "email"])
         .filter()
