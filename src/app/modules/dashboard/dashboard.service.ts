@@ -497,22 +497,27 @@ const allCuisineWithoutPagination = async (query: Record<string, unknown>) => {
 };
 
 const getRestaurants = async (query: Record<string, unknown>) => {
-    const res = await axios.get('https://api.yelp.com/v3/businesses/search', {
-        headers: {
-            Authorization: `Bearer ${config.yelp.secret_key}`,
-        },
-        params: {
-            term: 'restaurant',
-            location: 'New York',
-            limit: 10
-        }
-    });
+    try {
+        const res = await axios.get('https://api.yelp.com/v3/businesses/search', {
+            headers: {
+                Authorization: `Bearer ${config.yelp.secret_key}`,
+            },
+            params: {
+                term: 'restaurant',
+                location: 'New York',
+                limit: 10,
+                ...query, // allows overriding term/location/limit if needed
+            }
+        });
 
-    console.log(res.data.businesses);
-
-    return res.data.businesses
-
+        console.log(res.data.businesses);
+        return res.data.businesses;
+    } catch (error: any) {
+        console.error("Error fetching restaurants from Yelp API:", error.response?.data || error.message);
+        throw new Error("Failed to fetch restaurants from Yelp");
+    }
 };
+
 
 export const DashboardService = {
     totalCount,
