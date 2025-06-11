@@ -332,7 +332,6 @@ const allCuisineWithoutPagination = catchAsync(async (req: Request, res: Respons
   });
 });
 
-
 // ===========================================
 const getRestaurants = catchAsync(async (req: Request, res: Response) => {
   const result = await DashboardService.getRestaurants(req.query);
@@ -343,8 +342,6 @@ const getRestaurants = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
-
 
 // ================================
 
