@@ -16,7 +16,7 @@ app.use(
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:3002',
-      'http://localhost:3003',
+      'https://dashboard.laeatery.com',
       "http://10.0.60.41:5174",
       "http://10.0.60.41:5173",
     ],
