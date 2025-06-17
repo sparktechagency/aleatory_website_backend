@@ -12,7 +12,9 @@ app.use(
   cors({
     origin: [
       "https://laeatery.com",
+      "https://www.laeatery.com",
       'https://dashboard.laeatery.com',
+      'https://www.dashboard.laeatery.com',
       'http://192.168.10.16:3000',
       "https://laeatery-integration.vercel.app",
       'http://localhost:3000',
