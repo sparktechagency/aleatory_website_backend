@@ -133,6 +133,9 @@ router.get('/all_cuisine_without_pagination',
 router.get('/get_all_restaurants',
   DashboardController.getRestaurants,
 );
+router.get('/get_restaurant/:id',
+  DashboardController.getRestaurantById,
+);
 
 // ==============================
 

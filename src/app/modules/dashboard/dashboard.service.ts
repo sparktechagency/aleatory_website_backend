@@ -518,6 +518,22 @@ const getRestaurants = async (query: Record<string, unknown>) => {
     }
 };
 
+const getRestaurantById = async (id: string) => {
+    try {
+        const res = await axios.get(`https://api.yelp.com/v3/businesses/${id}`, {
+            headers: {
+                Authorization: `Bearer ${config.yelp.secret_key}`,
+            }
+        });
+
+        return res.data;
+    } catch (error: any) {
+        console.error("Error fetching restaurant by ID from Yelp API:", error.response?.data || error.message);
+        throw new ApiError(400, "Failed to fetch restaurant by ID from Yelp");
+    }
+};
+
+
 
 export const DashboardService = {
     totalCount,
@@ -550,5 +566,6 @@ export const DashboardService = {
     getAllRestaurant,
     allVibesWithoutPagination,
     allCuisineWithoutPagination,
-    getRestaurants
+    getRestaurants,
+    getRestaurantById
 };

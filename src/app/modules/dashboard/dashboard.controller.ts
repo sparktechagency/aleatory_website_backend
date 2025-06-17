@@ -2,9 +2,7 @@ import { Request, RequestHandler, Response } from 'express';
 import sendResponse from '../../../shared/sendResponse';
 import catchAsync from '../../../shared/catchasync';
 import { DashboardService } from './dashboard.service';
-import { ICuisine, IRestaurant, ISubscriptions, IVibe } from './dsashbaord.interface';
-import { IReqUser } from '../auth/auth.interface';
-
+import { ICuisine, IRestaurant, IVibe } from './dsashbaord.interface';
 
 const totalCount: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
@@ -343,6 +341,17 @@ const getRestaurants = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getRestaurantById = catchAsync(async (req: Request, res: Response) => {
+  const result = await DashboardService.getRestaurantById(req.params?.id as any);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Retrieved successfully',
+    data: result,
+  });
+});
+
+
 // ================================
 
 
@@ -377,5 +386,6 @@ export const DashboardController = {
   getAllRestaurant,
   allVibesWithoutPagination,
   allCuisineWithoutPagination,
-  getRestaurants
+  getRestaurants,
+  getRestaurantById
 };
