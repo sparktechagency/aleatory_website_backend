@@ -13,6 +13,7 @@ app.use(
     origin: [
       'http://192.168.10.16:3000',
       "https://laeatery-integration.vercel.app",
+      "https://laeatery.com",
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:3002',
