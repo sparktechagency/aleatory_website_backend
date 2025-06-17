@@ -11,13 +11,12 @@ export const app: Application = express();
 app.use(
   cors({
     origin: [
+      "https://laeatery.com",
+      'https://dashboard.laeatery.com',
       'http://192.168.10.16:3000',
       "https://laeatery-integration.vercel.app",
-      "https://laeatery.com",
       'http://localhost:3000',
       'http://localhost:3001',
-      'http://localhost:3002',
-      'https://dashboard.laeatery.com',
       "http://10.0.60.41:5174",
       "http://10.0.60.41:5173",
     ],
