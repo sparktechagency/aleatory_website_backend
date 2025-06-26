@@ -2,6 +2,8 @@
 import { Request } from 'express';
 import multer from 'multer';
 import fs from 'fs';
+import path from 'path';
+import slugify from 'slugify'; // optional, for cleaner short filenames
 
 export const uploadFile = () => {
   const storage = multer.diskStorage({
@@ -15,9 +17,7 @@ export const uploadFile = () => {
         uploadPath = 'uploads/images/profile';
       } else if (file.fieldname === 'product_img') {
         uploadPath = 'uploads/images/products';
-      } else if (file.fieldname === 'cover_photo') {
-        uploadPath = 'uploads/images/restaurant';
-      } else if (file.fieldname === 'gallery_photo') {
+      } else if (file.fieldname === 'cover_photo' || file.fieldname === 'gallery_photo') {
         uploadPath = 'uploads/images/restaurant';
       } else if (file.fieldname === 'image') {
         uploadPath = 'uploads/images/image';
@@ -29,11 +29,14 @@ export const uploadFile = () => {
         uploadPath = 'uploads';
       }
 
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
+
       if (
         file.mimetype === 'image/jpeg' ||
         file.mimetype === 'image/png' ||
         file.mimetype === 'image/jpg' ||
-        // file.mimetype === 'image/webp' ||
         file.mimetype === 'video/mp4'
       ) {
         cb(null, uploadPath);
@@ -41,14 +44,16 @@ export const uploadFile = () => {
         //@ts-ignore
         cb(new Error('Invalid file type'));
       }
-
-      if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath, { recursive: true });
-      }
     },
+
     filename: function (req, file, cb) {
-      const name = Date.now() + '-' + file.originalname;
-      cb(null, name);
+      const ext = path.extname(file.originalname); // .jpg, .png, etc.
+      const base = slugify(path.basename(file.originalname, ext), {
+        lower: true,
+        strict: true,
+      }).substring(0, 20); // optional slugified prefix, max 20 chars
+      const uniqueName = `${Date.now()}-${Math.floor(Math.random() * 1e6)}-${base}${ext}`;
+      cb(null, uniqueName);
     },
   });
 
@@ -62,8 +67,8 @@ export const uploadFile = () => {
       'thumbnail',
       'video_thumbnail',
       'message_img',
-      "gallery_photo",
-      "cover_photo"
+      'gallery_photo',
+      'cover_photo',
     ];
 
     if (file.fieldname === undefined) {
@@ -98,7 +103,8 @@ export const uploadFile = () => {
     { name: 'thumbnail', maxCount: 1 },
     { name: 'message_img', maxCount: 10 },
     { name: 'cover_photo', maxCount: 1 },
-    { name: 'gallery_photo', maxCount: 10 },]);
+    { name: 'gallery_photo', maxCount: 10 },
+  ]);
 
   return upload;
 };
